@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Water</title>
+<title>Rocket</title>
   <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
 </head>
 <body>
@@ -21,10 +21,6 @@ var canvas = document.getElementById("myCanvas");
   var cScale = Math.min(canvas.width, canvas.height) / simMinWidth;
   var simWidth = canvas.width / cScale;
   var simHeight = canvas.height / cScale;
-    const ball=[];
-  function addWater(xi,yi,ri,xveli,yveli){
-    ball.push({pos:{x:xi,y:yi},vel:{x:xveli,y:yveli},r:ri});
-  }
 
     function dot(v1,v2){
       return v1.x*v2.x+v1.y*v2.y;
@@ -51,112 +47,56 @@ var canvas = document.getElementById("myCanvas");
 
   var gravity = { x: 0.0, y: -9.8};
   var dt = 1.0 / 60.0;
+    var rocket = {pos:{x:0.0,y:5.0},vel:{x:0.0,y:0.0}};
+
+    var rocketHeight = 5;
+    var rocketWidth = 4;
   // drawing -------------------------------------------------------
 
   function draw() {
     c.clearRect(0, 0, canvas.width, canvas.height);
-    c.font = "48px serif";
-  c.fillText(String(bounce), 10, 50);
-      c.fillStyle = "#0000FF";
- c.beginPath();			
-    c.arc(
-      cX(ball[0].pos), cY(ball[0].pos), cScale * ball[0].r, 0.0, 2.0 * Math.PI); 
-    c.closePath();
-          c.fill();	
-    c.fillStyle = "#FF0000";
-for(var i =1;i<ball.length;i++){
-    c.beginPath();			
-    c.arc(
-      cX(ball[i].pos), cY(ball[i].pos), cScale * ball[i].r, 0.0, 2.0 * Math.PI); 
-    c.closePath();
-          c.fill();	
-}
+  c.rect(rocket.pos.x-0.5*rocketWidth,rocket.pos.y+0.5*Height, rocketWidth,rocketHeight);
+c.stroke();
   }
 
   // simulation ----------------------------------------------------
 
- 
-
+ var down = false;
+    var up =false;
+function acceleration(){
+  
+}
   function simulate() {
-  for(var i =0;i<ball.length;i++){
-    ball[i].vel.x += gravity.x * dt;
-    ball[i].vel.y += gravity.y * dt;
-    ball[i].pos.x += ball[i].vel.x * dt;
-    ball[i].pos.y+= ball[i].vel.y * dt;
-
-    if (ball[i].pos.x < 0.0+ball[i].r) {
-      ball[i].pos.x = 0.0+ball[i].r;
+  
+    rocket.vel.x += gravity.x * dt;
+    rocket.vel.y += gravity.y * dt;
+    rocket.pos.x += rocket.vel.x * dt;
+   rocket.pos.y+= rocketvel.y * dt;
+/*
+   if (ball[i].pos.x < 0.0+ball[i].r) {
+   ball[i].pos.x = 0.0+ball[i].r;
       ball[i].vel.x = 0;
     }
     if (ball[i].pos.x > simWidth-ball[i].r) {
       ball[i].pos.x = simWidth-ball[i].r;
       ball[i].vel.x= 0;
     }
-    if (ball[i].pos.y < 0.0+ball[i].r) {
-      ball[i].pos.y = 0.0+ball[i].r;
-      ball[i].vel.y =0
-        //-ball[i].vel.y;
-    }
     if (ball[i].pos.y > simHeight-ball[i].r) {
       ball[i].pos.y =simHeight-ball[i].r;
       ball[i].vel.y = 0;
         -ball[i].vel.y;
     }
-  }
+   */
+     if (rocket.pos.y < 0.0+rocketHeight/2) {
+      rocket.pos.y = 0.0+rocketHeight/2;
+      rocket.vel.y =0;
+    }
   }
 
   // make browser to call us repeatedly -----------------------------------
-var hor=0;
-    var ver=0;
-    var left=false;
-    var right=false;
-    var up=false;
-    var down =false;
-    var speedy=false;
-    var speed=150;
   function update() {
-   // console.log("hi");
-    if(speedy){
-      speed=5*150;
-    }
-    else{
-      speed=150;
-    }
-  ball[0].vel.x = speed*hor;
-   ball[0].vel.y = speed*ver;
-    if(left && right){
-      hor=0;
-    }
-    else if(left){
-    hor=-0.1;
-    }
-    else if(right){
-    hor=0.1;
-    }
-    else{
-    hor=0;
-    }
-    if(up && down){
-      ver=0;
-    }
-    else if(down){
-    ver=-0.1;
-    }
-    else if(up){
-    ver=0.1;
-    }
-    else{
-    ver=0;
-    }
     
    document.addEventListener('keydown', function(event) {
-        if(event.keyCode == 37) {
-          
-          left=true;
-        }
-        else if(event.keyCode == 39) {
-          right=true;
-        }
        else if(event.keyCode == 38) {
           
           up=true;
@@ -164,18 +104,10 @@ var hor=0;
         else if(event.keyCode == 40) {
           down=true;
         }
-      else if(event.keyCode == 49) {
-          speedy=true;
-        }
      });
      
     document.addEventListener('keyup', function(event) {
-        if(event.keyCode == 37) {
-         left=false;
-        }
-        else if(event.keyCode == 39) {
-          right=false;
-        }
+  
         else if(event.keyCode == 38) {
           
           up=false;
@@ -183,13 +115,10 @@ var hor=0;
         else if(event.keyCode == 40) {
           down=false;
         }
-       else if(event.keyCode == 49) {
-          speedy=false;
-        }
      });
     simulate();
-    checkCollisions();
     draw();
+      acceleration();
     requestAnimationFrame(update);
   }
  addWater(20,20,0.6,0,0);
